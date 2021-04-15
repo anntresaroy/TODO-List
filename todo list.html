@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO LIST</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,500,300' rel='stylesheet' type='text/css'>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>  
+<link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+  
+  
+	<form action="index.html" id="form" onsubmit="return validate(redirect)"></form>
+   <div class="tab">
+	   <button class="tablinks" onclick="openCity(event, 'London')"><a href="index.html">LOG OUT</a></button>
+    
+  </div>
+  
+  <!-- Tab content -->
+
+
+    <div class="auto" style="width: 100%;">
+      <h1 id="head">TO-DO LIST</h1>
+        
+        <table id="tbl1" style="padding-left: 10em; width: 100%;">
+            
+        </table>
+     </div>   
+       
+      
+    
+	</body>
+<script >
+	$(function () {
+
+    try {
+        let count = [];
+        $("#tbl1").on("change", ":checkbox", function () {
+            
+            var chkstatus=this.checked;
+            let index=count.indexOf(this.id);
+            let arritem=this.id;
+            console.log(arritem,index);
+            console.log(index);
+           
+            var promise2 = new Promise(function (resolve, reject) {
+
+                console.log(this.id);
+                if(chkstatus === true)
+                {
+                    if(index==-1){
+                        count.push(arritem);
+                    }
+                   
+                   
+                }
+                else {
+                    if(index!=-1){
+                        count.splice(index,1);
+                    }
+                   
+                }
+                console.log(count,chkstatus);
+                if (count.length==5) {
+                    resolve("Congrats! 5 Tasks have been successfully completed!");
+                   
+                }
+            });
+            promise2
+                .then(function (r) {
+                    alert(r);
+                    count = [];
+                });
+        });
+        
+        let tbl1 = document.getElementById("tbl1")
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let List = JSON.parse(this.responseText);
+                let item = List;
+                
+                let output = "<caption></caption><tr><th>User Id</th><th>Id</th><th>Title</th><th>Completed</th></tr>";
+                for (let i = 0; i < item.length; i++) {
+                    output += "<tr>";
+                    output += "<td>" + item[i].userId + "</td>";
+                    output += "<td>" + item[i].id + "</td>";
+                    output += "<td>" + item[i].title + "</td>";
+                    
+                    output += "<td><input type='checkbox' id='chkbox"+ item[i].id +"'" + ((item[i].completed == true) ? 'checked disabled' : '') + " ></td>";
+                    
+                }
+                tbl1.innerHTML = output;
+            }
+        }
+        xhttp.open("GET", "https://jsonplaceholder.typicode.com/todos", true);
+        xhttp.send();
+        
+    }
+    catch (e) {
+        document.getElementById("listdiv").innerHTML = e;
+    }
+    $("#logoutid").click(function(){location.replace("index.html");});
+    
+});
+
+</script>
+<style>
+	*{
+  padding:0;
+  margin:0;
+}
+
+body{
+ margin-top: 20px; 
+ width: 100%; 
+font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#head{
+		text-align: center;
+	}
+
+/* Add a black background color to the top navigation */
+
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px  rgb(10, 10, 10);
+  background-color: grey;
+}
+	.tab a{
+		text-decoration: none;
+		color: black;
+	}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: right;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: rgb(153, 137, 153);
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  
+}
+  
+  
+  
+
+
+  
+  body{
+    background: gray;
+  }
+  
+  
+  
+#tbl1{
+    background: #222020;
+    border-collapse: collapse;
+    border: 2px solid rgb(168, 161, 168); 
+}
+th{
+    color: rgb(252, 238, 180);
+    text-transform: uppercase;
+    text-align: center;
+
+}
+th, td{
+    border: 1px solid rgb(gray);
+    padding: 15px;
+    font-weight: bolder;
+    color:rgb(235, 223, 223);
+}
+a:hover{
+    cursor:pointer;
+    color:lightblue;
+
+}
+
+</style>
+    
+</html>
+  
